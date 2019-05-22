@@ -1,10 +1,9 @@
-
-
 const http = require('http');
 const https = require('https');
 const qs = require('querystring');
-const port = 8080;
+const port = 3000;
 const checksum_lib = require('./checksum.js');
+const cors = require('cors');
 
 var PaytmConfig = {
 	mid: "pEwPzj57976555121471",
@@ -12,8 +11,18 @@ var PaytmConfig = {
 	website: "localhost"
 }
 
-
 http.createServer(function (req, res) {
+	res.setHeader('Access-Control-Allow-Headers', 'authorization, content-type');
+	res.setHeader('Access-Control-Allow-Origin', req.headers.host);
+	res.setHeader('Access-Control-Request-Method', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
+	res.setHeader('Access-Control-Allow-Headers', '*');
+
+	if ( req.method === 'OPTIONS' ) {
+		res.writeHead(200);
+        return res.status(200).json({});
+		return;
+	}
 
 	switch(req.url){
 		case "/":
@@ -23,6 +32,7 @@ http.createServer(function (req, res) {
 		break;
 
 		case "/getCheckSum": 
+		console.log("Headers:", req.headers)
 			var payload = '';
 		    req.on('data', chunk => {
 		        payload += chunk.toString(); // convert Buffer to string
@@ -83,7 +93,7 @@ http.createServer(function (req, res) {
 	        req.on('end', function () {
 				// var post_data = qs.parse(body);
 
-				res.writeHead(301, { Location: 'http://localhost/search-bus/confirmation?'+ body.toString() });
+				res.writeHead(301, { Location: 'https://localhost:8200/search-bus/confirmation?'+ body.toString() });
 				res.end();
 	        });
 			
@@ -248,4 +258,4 @@ http.createServer(function (req, res) {
 
 }).listen(port, function() {
 	console.log('API Running on', port);
-});
+})
