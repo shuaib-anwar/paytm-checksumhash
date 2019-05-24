@@ -87,7 +87,7 @@ http.createServer(function (req, res) {
 	        req.on('end', function () {
 				// var post_data = qs.parse(body);
 
-				res.writeHead(301, { Location: 'https://localhost/search-bus/confirmation?'+ body.toString() });
+				res.writeHead(301, { Location: 'http://localhost/search-bus/confirmation?'+ body.toString() });
 				res.end();
 	        });
 			
